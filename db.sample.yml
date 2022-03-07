@@ -1,0 +1,23 @@
+default:
+  username: api
+  password: dQw4w9WgXcQ
+  port: 8728
+  collectors: all
+
+devices:
+  10.100.0.1:
+    name: Home-Gateway
+    location: mordor
+    port: 1488
+
+  10.100.0.2:
+    name: Home-SW1
+    username: Rick
+    password: Astley
+    location: mordor
+  
+  10.101.0.1:
+    name: Mikrotik-CHR
+    username: gaben
+    location: OVH
+    collectors: resource

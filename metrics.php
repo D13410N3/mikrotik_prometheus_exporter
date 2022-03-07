@@ -26,7 +26,7 @@ if (isset($_GET['ip'])) {
 	$_DEVICE['ip'] = $_IP;
 	// Checking connect-settings
 	// These values can't be empty
-	$check = array('port', 'username');
+	$check = array('port', 'username', 'location');
 	foreach ($check as $value) {
 		if (@empty($_DEVICE[$value])) {
 			if (@!empty($_DB['default'][$value])) {
@@ -64,9 +64,9 @@ if (isset($_GET['ip'])) {
 	
 	// Connection successful - time to start collecting information
 	$_OUT = array();
-	$_ARR = array('ip' => $_IP, 'hostname' => $_DEVICE['name']);
+	$_ARR = array('ip' => $_IP, 'hostname' => $_DEVICE['name'], 'location' => $_DEVICE['location']);
 	
-	$_OUT[] = prom(PREFIX.'_status', $_ARR, 1);
+	$_OUT[] = prom(PREFIX.'_global_status', $_ARR, 1);
 	
 	// Requiring collectors
 	foreach (glob('collectors/*.php') as $collector_file) {
@@ -76,7 +76,7 @@ if (isset($_GET['ip'])) {
 	// Counting scrape_time
 	$_end_time = microtime(true);
 	$scrape_time = round($_end_time - $_start_time, 7) * 1000;
-	$_OUT[] = prom(PREFIX.'_total_scrape_time', $_ARR, $scrape_time);
+	$_OUT[] = prom(PREFIX.'_global_scrape_time', $_ARR, $scrape_time);
 	
 	// Outputing the result
 	$_OUT[] = PHP_EOL;

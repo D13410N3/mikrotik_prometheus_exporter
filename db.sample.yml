@@ -1,23 +1,26 @@
 default:
-  username: api
-  password: dQw4w9WgXcQ
-  port: 8728
-  collectors: all
+  username: api # Default username when non-specified
+  password: dQw4w9WgXcQ # Default password when non-specified
+  port: 8728 # Default port when ... yes, you're right
+  location: fra # You know
+  collectors: all # Default collectors-list behaviour
 
 devices:
-  10.100.0.1:
-    name: Home-Gateway
-    location: mordor
-    port: 1488
+  # This device will use default username, password and list of collectors
+  10.100.0.1: # Device IP
+    name: Home-Gateway # Friendly-name
+    location: mordor # Location
+    port: 1488 # Rewrite port (non-standart)
 
   10.100.0.2:
+    # This device will use default port and collectors list
     name: Home-SW1
-    username: Rick
-    password: Astley
+    username: Rick # Rewrite username
+    password: Astley # Rewrite password
     location: mordor
   
   10.101.0.1:
+    # This device will use default port, password, location and scrape "resource" only
     name: Mikrotik-CHR
     username: gaben
-    location: OVH
     collectors: resource

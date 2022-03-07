@@ -32,7 +32,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_'.$mt, $_ARR_COLL, $value);
 			} else {
 				// Otherwise - we're adding this as a label and value 1
-				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_'.$mt, $_ARR_COLL + array($mt => $value), 1);
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_'.$mt, $_ARR_COLL + array('value' => $value), 1);
 			}
 		}
 	}

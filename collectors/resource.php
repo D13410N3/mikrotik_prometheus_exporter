@@ -12,6 +12,12 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 	$_cmd = '/system/resource/print';
 	$result = $_API -> comm($_cmd);
 	$res = $result[0];
+	
+	// Sending the debug-info if it's required by second arg in cli
+	if ($_DEBUG === true && $_DEBUG_COLL == $_COLLECTOR['name']) {
+		var_dump($res);
+	}
+	
 	if (empty($res)) {
 		$_OUT[] = array('mt_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response'), 1);
 	} else {

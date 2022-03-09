@@ -4,10 +4,17 @@ require_once 'init.php';
 // CLI-access for debugging
 // Script can be run from cli by using 'php metrics.php <device_ip>' 
 if (php_sapi_name() == 'cli') {
-	if ($argc == 2) {
+	$_DEBUG = true;
+	if ($argc >= 2) {
 		$_GET['ip'] = $argv[1];
+		// Checking second as if it is collector_name 
+		if (isset($argv[2])) {
+			$_DEBUG_COLL = $argv[2];
+		} else {
+			$_DEBUG_COLL = '';
+		}
 	} else {
-		die('Usage: php metrics.php <device_ip>');
+		die('Usage: php metrics.php <device_ip> [<debug_controller_name>]');
 	}
 }
 

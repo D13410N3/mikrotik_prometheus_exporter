@@ -87,7 +87,11 @@ if (isset($_GET['ip'])) {
 	
 	// Outputing the result
 	$_OUT[] = PHP_EOL;
-	echo implode(PHP_EOL, $_OUT);
+	if ($_DEBUG === true && @$argv[3] == 'dump') {
+		var_dump($_OUT);
+	} else {
+		echo implode(PHP_EOL, $_OUT);
+	}
 	
 } else {
 	die('You didn\'t specify IP-address as GET-argument');

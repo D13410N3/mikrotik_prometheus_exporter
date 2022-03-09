@@ -1,6 +1,7 @@
 <?php
 // Collector name
 $_COLLECTOR['name'] = 'resource';
+$_COLLECTOR['cmd'] = '/system/resource/print';
 if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 	$_coll_start_time = microtime(true);
 	
@@ -9,8 +10,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 	
 	// Starting collecting
 	// Command to execute
-	$_cmd = '/system/resource/print';
-	$result = $_API -> comm($_cmd);
+	$result = $_API -> comm($_COLLECTOR['cmd']);
 	$res = $result[0];
 	
 	// Sending the debug-info if it's required by second arg in cli
@@ -19,7 +19,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 	}
 	
 	if (empty($res)) {
-		$_OUT[] = array('mt_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response'), 1);
+		$_OUT[] = prom('mt_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response'), 1);
 	} else {
 		// Just foreach every string excepting some fields
 		foreach ($res as $metric_name => $value) {
@@ -30,7 +30,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 			if ($metric_name == 'uptime') {
 				$value = mikrotik_time($value);
 			} elseif ($metric_name == 'build-time') {
-				$value = strtotime($value);
+				$value = DateTime::createFromFormat('M/d/Y H:i:s', $value) -> getTimestamp();
 			}
 			
 			// Checking if value is int or float; if it is - we're using it as a real value
@@ -48,5 +48,6 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 	$_coll_scrape = round($_coll_end_time - $_coll_start_time, 7) * 1000;
 	
 	$_OUT[] = prom(PREFIX.'_collector_scrape_duration', $_ARR_COLL, $_coll_scrape);
+	$_OUT[] = PHP_EOL.PHP_EOL;
 	unset($_ARR_COLL);
 }

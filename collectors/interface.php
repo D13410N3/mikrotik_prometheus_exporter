@@ -22,56 +22,6 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 		$_OUT[] = prom('mt_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response'), 1);
 	} else {
 		// Starting the collection
-		/*
-		    [".id"]=>
-			string(2) "*E"
-			["name"]=>
-			string(5) "local"
-			["type"]=>
-			string(6) "bridge"
-			["mtu"]=>
-			string(4) "auto"
-			["actual-mtu"]=>
-			string(4) "1500"
-			["l2mtu"]=>
-			string(4) "1592"
-			["mac-address"]=>
-			string(17) "C4:AD:34:D3:22:C8"
-			["last-link-up-time"]=>
-			string(20) "jan/15/2022 00:23:08"
-			["link-downs"]=>
-			string(1) "0"
-			["rx-byte"]=>
-			string(12) "825353547951"
-			["tx-byte"]=>
-			string(14) "10519523114081"
-			["rx-packet"]=>
-			string(10) "2478980033"
-			["tx-packet"]=>
-			string(10) "9269898847"
-			["rx-drop"]=>
-			string(1) "0"
-			["tx-drop"]=>
-			string(1) "0"
-			["tx-queue-drop"]=>
-			string(1) "0"
-			["rx-error"]=>
-			string(1) "0"
-			["tx-error"]=>
-			string(1) "0"
-			["fp-rx-byte"]=>
-			string(12) "819981214692"
-			["fp-tx-byte"]=>
-			string(3) "408"
-			["fp-rx-packet"]=>
-			string(10) "2433839380"
-			["fp-tx-packet"]=>
-			string(1) "4"
-			["running"]=>
-			string(4) "true"
-			["disabled"]=>
-			string(5) "false"
-		*/
 		
 		// Just foreach every string excepting some fields
 		// 1st foreach: list of interfaces

@@ -29,8 +29,8 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 			// 2nd foreach: separate interface - sending all excluding interface name (it will be added for every metric string) and it (it smells like shit)
 			foreach ($interface as $metric_name => $value) {
 				if ($metric_name != 'name' && $metric_name != '.id') {
-					// replacing '-' with '_'
-					$mt = str_replace('-', '_', $metric_name);
+					// replacing '-' and '.' with '_'
+					$mt = str_replace('-', '_', str_replace('.', '_', $metric_name));
 					
 					// Replacing awful date-format
 					if ($metric_name == 'last-link-up-time' OR $metric_name == 'last-link-down-time') {

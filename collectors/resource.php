@@ -23,8 +23,8 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 	} else {
 		// Just foreach every string excepting some fields
 		foreach ($res as $metric_name => $value) {
-			// replacing '-' with '_'
-			$mt = str_replace('-', '_', $metric_name);
+			// replacing '-' and '.' with '_'
+			$mt = str_replace('-', '_', str_replace('.', '_', $metric_name));
 			
 			// Replacing awful date-format
 			if ($metric_name == 'uptime') {

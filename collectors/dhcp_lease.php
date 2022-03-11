@@ -39,10 +39,6 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 					if ($option_name == 'last_seen' OR $option_name == 'expires_after') {
 						$option_value = mikrotik_time($option_value);
 					}
-					// rewriting _id from 16 to 10, but there's one nuance... 
-					if ($option_name == '_id') {
-						$option_value = base_convert(intval(str_replace('*', '', $option_value)), 16, 10);
-					}
 
 					// Finally saving filtered element
 					$labels[$option_name] = $option_value;

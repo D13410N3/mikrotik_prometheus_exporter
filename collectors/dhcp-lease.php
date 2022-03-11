@@ -25,7 +25,6 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 		// foreach every string as 
 		// 
 
-		}
 	}
 	
 	// Collector scrape duration

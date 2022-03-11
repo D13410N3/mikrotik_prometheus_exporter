@@ -35,6 +35,10 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 					if ($option_value == 'true' OR $option_value == 'false') {
 						$option_value = $option_value == 'true' ? 1 : 0;
 					}
+					// working with awful date
+					if ($option_name == 'last_seen' OR $option_name == 'expires_after') {
+						$option_value = mikrotik_time($option_value);
+					}
 					$labels[$option_name] = $option_value;
 				}
 			}

@@ -22,34 +22,13 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 		$_OUT[] = prom('mt_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response'), 1);
 	} else {
 		// Starting the collection
+		// Saving fields: address, mac-address, server
 		// 1st foreach: all clients to one client:
 		foreach ($result as $key => $lease) {
-			// 2nd foreach: rewrite labels and values
-			$labels = array();
-			foreach ($lease as $option_name => $option_value) {
-				// Excluding 'status' (it will be value)
-				if ($option_name != 'status') {
-					// replacing '.' and '-' with '_' for label name 
-					$option_name = str_replace('-', '_', str_replace('.', '_', $option_name));
-					// detecting true-false values & replacing them with 1-0
-					if ($option_value == 'true' OR $option_value == 'false') {
-						$option_value = $option_value == 'true' ? 1 : 0;
-					}
-					// working with awful date
-					if ($option_name == 'last_seen' OR $option_name == 'expires_after') {
-						$option_value = mikrotik_time($option_value);
-					}
-
-					// Finally saving filtered element
-					$labels[$option_name] = $option_value;
-				}
-			}
-			// Setting up 1 or 0 value if device is bound or not
+			$labels = array('address' => $lease['address'], 'mac_address' => $lease['mac-address'], 'server' => $lease['server']);
 			$value = $lease['status'] == 'bound' ? 1 : 0;
-			// All data saved - let's create prom-string
 			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'], $_ARR_COLL + $labels, $value);
 		}
-
 	}
 	
 	// Collector scrape duration

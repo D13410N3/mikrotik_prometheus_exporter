@@ -1,5 +1,6 @@
 <?php
 // Collector name
+$_COLLECTOR['enable'] = 1;
 $_COLLECTOR['name'] = 'resource';
 $_COLLECTOR['cmd'] = '/system/resource/print';
 if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
@@ -21,25 +22,29 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 	if (empty($res)) {
 		$_OUT[] = prom('mt_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response'), 1);
 	} else {
-		// Just foreach every string excepting some fields
-		foreach ($res as $metric_name => $value) {
-			// replacing '-' and '.' with '_'
-			$mt = str_replace('-', '_', str_replace('.', '_', $metric_name));
-			
-			// Replacing awful date-format
-			if ($metric_name == 'uptime') {
-				$value = mikrotik_time($value);
-			} elseif ($metric_name == 'build-time') {
-				$value = DateTime::createFromFormat('M/d/Y H:i:s', $value) -> getTimestamp();
+		if ($_COLLECTOR['enable'] == 1) {
+			// Just foreach every string excepting some fields
+			foreach ($res as $metric_name => $value) {
+				// replacing '-' and '.' with '_'
+				$mt = str_replace('-', '_', str_replace('.', '_', $metric_name));
+				
+				// Replacing awful date-format
+				if ($metric_name == 'uptime') {
+					$value = mikrotik_time($value);
+				} elseif ($metric_name == 'build-time') {
+					$value = DateTime::createFromFormat('M/d/Y H:i:s', $value) -> getTimestamp();
+				}
+				
+				// Checking if value is int or float; if it is - we're using it as a real value
+				if (is_numeric($value)) {
+					$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_'.$mt, $_ARR_COLL, $value);
+				} else {
+					// Otherwise - we're adding this as a label and value 1
+					$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_'.$mt, $_ARR_COLL + array('value' => $value), 1);
+				}
 			}
-			
-			// Checking if value is int or float; if it is - we're using it as a real value
-			if (is_numeric($value)) {
-				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_'.$mt, $_ARR_COLL, $value);
-			} else {
-				// Otherwise - we're adding this as a label and value 1
-				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_'.$mt, $_ARR_COLL + array('value' => $value), 1);
-			}
+		} elseif ($_DEBUG === true) {
+			var_dump($result);
 		}
 	}
 	

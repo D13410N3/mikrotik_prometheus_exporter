@@ -27,6 +27,19 @@ function mikrotik_time($string = '1d') {
 	return $sec;
 }
 
+function mikrotik_traffic($string = 0) {
+	$result = 0;
+	if (is_numeric($string)) {
+		$result = $string;
+	} elseif (preg_match('#^([0-9\.]{1,})(K|M)iB$#', $string, $res)) {
+		$result = round(str_replace('K', '1024', str_replace('M', 1048576, $res[2])) * $res[1], 0);
+	} else {
+		$result = 0;
+	}
+	
+	return $result;
+}
+
 class Routeros_API
 {
     var $debug     = false; //  Show debug information

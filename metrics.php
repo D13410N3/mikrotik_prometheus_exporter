@@ -16,6 +16,9 @@ if (php_sapi_name() == 'cli') {
 	} else {
 		die('Usage: php metrics.php <device_ip> [<debug_controller_name>]');
 	}
+} else {
+	$_DEBUG = false;
+	$_DEBUG_COLL = '';
 }
 
 if (isset($_GET['ip'])) {

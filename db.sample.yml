@@ -3,7 +3,7 @@ default:
   password: dQw4w9WgXcQ # Default password when non-specified
   port: 8728 # Default port when ... yes, you're right
   location: fra # You know
-  collectors: all # Default collectors-list behaviour
+  collectors: all # Default collectors-list behaviour. May be an array too
 
 devices:
   # This device will use default username, password and list of collectors
@@ -20,7 +20,9 @@ devices:
     location: mordor
   
   10.101.0.1:
-    # This device will use default port, password, location and scrape "resource" only
+    # This device will use default port, password, location and scrape "resource & interface" only
     name: Mikrotik-CHR
     username: gaben
-    collectors: resource
+    collectors:
+      - resource
+      - interface

@@ -51,13 +51,23 @@ if (isset($_GET['ip'])) {
 
 	// Building list of collectors for device
 	if (@!empty($_DEVICE['collectors'])) {
-		$_COLLECTORS = array_map('trim', explode(',', $_DEVICE['collectors']));
-	} else {
-		if (@!empty($_DB['default'])) {
-			$_COLLECTORS = array_map('trim', explode(',', $_DB['default']['collectors']));
+		if (is_array($_DEVICE['collectors'])) {
+			$_COLLECTORS = $_DEVICE['collectors'];
+		} elseif (is_string($_DEVICE['collectors'])) {
+			$_COLLECTORS = array(0 => $_DEVICE['collectors']);
 		} else {
 			$_COLLECTORS = array();
 		}
+	} elseif (@!empty($_DB['default']['collectors'])) {
+		if (is_array($_DB['default']['collectors'])) {
+			$_COLLECTORS = $_DB['default']['collectors'];
+		} elseif (is_string($_DB['default']['collectors'])) {
+			$_COLLECTORS = array(0 => $_DB['default']['collectors']);
+		} else {
+			$_COLLECTORS = array();
+		}
+	} else {
+		$_COLLECTORS = array();
 	}
 	
 	// Trying to initialize connection to the device

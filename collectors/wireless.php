@@ -52,7 +52,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 			var_dump($result);
 		}
 
-		if ($result['enabled'] == 'true') {
+		if ($result[0]['enabled'] == 'true') {
 			// This is a capsman-client-device. Just notify about this
 			// Sending "wireless mode" as "capsman-client"
 			$_OUT[] = prom(PREFIX.'_wireless', $_ARR_COLL + array('mode' => 'capsman-client'), 1);

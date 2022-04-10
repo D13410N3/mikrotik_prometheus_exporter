@@ -33,12 +33,12 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 			$labels = array('instance' => $neighbor['instance'], 'area' => $neighbor['area'], 'address' => $neighbor['address'], 'router_id' => $neighbor['router-id']);
 			// Checking what value will be on status:
 			$value = $neighbor['state'] == 'Full' ? 1 : 0;
-			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name']).'_neighbor_status', $_ARR_COLL + $labels, $value);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_neighbor_status', $_ARR_COLL + $labels, $value);
 			// state-changes
-			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name']).'_neighbor_state_changes', $_ARR_COLL + $labels, $neighbor['state-changes']);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_neighbor_state_changes', $_ARR_COLL + $labels, $neighbor['state-changes']);
 			// Convert awful mikrotik-date to seconds:
 			$value = mikrotik_time($neighbor['adjacency']);
-			$_OUT[] prom(PREFIX.'_'.$_COLLECTOR['name']).'_neighbor_adjacency', $_ARR_COLL + $labels, $value);
+			$_OUT[] prom(PREFIX.'_'.$_COLLECTOR['name'].'_neighbor_adjacency', $_ARR_COLL + $labels, $value);
 		}
 	}
 	

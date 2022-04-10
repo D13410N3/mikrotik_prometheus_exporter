@@ -3,7 +3,7 @@ $_start_time = microtime(true);
 
 // Predefine prefix for metrics-name (mt_status, mt_scrape_time etc.)
 
-define('PREFIX', 'mt');
+define('PREFIX', 'mikrotik');
 header('Content-type: text/plain');
 
 require_once 'mikrotik_api.php';

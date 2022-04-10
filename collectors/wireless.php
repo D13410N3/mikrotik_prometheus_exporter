@@ -1,8 +1,7 @@
 <?php
 // Collector name
-$_COLLECTOR['enable'] = 0;
+$_COLLECTOR['enable'] = 1;
 $_COLLECTOR['name'] = 'wireless';
-$_COLLECTOR['cmd'] = '/interface/wireguard/peers/print';
 if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] == 1) {
 	$_coll_start_time = microtime(true);
 	
@@ -10,26 +9,71 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 	$_ARR_COLL = $_ARR + array('collector' => $_COLLECTOR['name']);
 	
 	// Starting collecting
-	// Command to execute
-	$result = $_API -> comm($_COLLECTOR['cmd']);
-	
+	/* Algo:
+	1) Checking if capsman-manager is enabled
+		Y: Getting registration table from capsman (interface=2G-Home-W1-1 ssid="ASUS" mac-address=C4:4F:33:EA:91:AB)
+		N: 1a) Checking if wireless/cap is enabled
+			Y: Capsman-client-device. Ignoring
+			N: Standalone wireless-router. Getting registration table from wireless
+	*/
+
+	// 1)
+	$cmd = '/caps-man/manager/print';
+	$result = $_API -> comm($cmd);
 	// Sending the debug-info if it's required by second arg in cli
 	if ($_DEBUG === true && $_DEBUG_COLL == $_COLLECTOR['name']) {
 		var_dump($result);
 	}
-	
-	if (empty($result)) {
-		$_OUT[] = prom('mt_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response'), 1);
+
+	if ($result[0]['enabled'] == 'true') {
+		// Y: Getting registration table from capsman:
+		$cmd = '/caps-man/registration-table/print';
+		$result = $_API -> comm($cmd);
+		// Sending the debug-info if it's required by second arg in cli
+		if ($_DEBUG === true && $_DEBUG_COLL == $_COLLECTOR['name']) {
+			var_dump($result);
+		}
+
+		// Sending "wireless mode" as "capsman-manager"
+		$_OUT[] = prom(PREFIX.'_wireless', $_ARR_COLL + array('mode' => 'capsman-manager'), 1);
+
+		// result is an array of arrays
+		foreach ($result as $key => $w_client) {
+			// Bind all values to static:
+			$labels = array('interface' => $w_client['interface'], 'ssid' => $w_client['ssid'], 'mac_address' => $w_client['mac-address']);
+			$_OUT[] = prom(PREFIX.'_wireless_client', $_ARR_COLL + $labels, 1);
+		}
 	} else {
-		/* Algo:
-		1) Checking if capsman is enabled
-			1a) Checking if CAP-manager is enabled:
-			
-			Y: Getting registration table from capsman w/ fields:
-				
-		
-		
-		*/
+		// N: Checking if wireless-cap is enabled
+		$cmd = '/interface/wireless/cap/print';
+		$result = $_API -> comm($cmd);
+		// Sending the debug-info if it's required by second arg in cli
+		if ($_DEBUG === true && $_DEBUG_COLL == $_COLLECTOR['name']) {
+			var_dump($result);
+		}
+
+		if ($result['enabled'] == 'true') {
+			// This is a capsman-client-device. Just notify about this
+			// Sending "wireless mode" as "capsman-client"
+			$_OUT[] = prom(PREFIX.'_wireless', $_ARR_COLL + array('mode' => 'capsman-client'), 1);
+		} else {
+			// Sending "wireless mode" as "standalone"
+			$_OUT[] = prom(PREFIX.'_wireless', $_ARR_COLL + array('mode' => 'standalone'), 1);
+
+			// Standalone wireless-router/access-point. Collecting in a usual way
+			$cmd = '/interface/wireless/registration-table/print';
+			$result = $_API -> comm($result);
+			// Sending the debug-info if it's required by second arg in cli
+			if ($_DEBUG === true && $_DEBUG_COLL == $_COLLECTOR['name']) {
+				var_dump($result);
+			}
+
+			foreach ($result as $key => $w_client) {
+				// Bind all values to static:
+				$labels = array('interface' => $w_client['interface'], 'ssid' => $w_client['ssid'], 'mac_address' => $w_client['mac-address']);
+				$_OUT[] = prom(PREFIX.'_wireless_client', $_ARR_COLL + $labels, 1);
+			}
+		}
 	}
 	
 	// Collector scrape duration

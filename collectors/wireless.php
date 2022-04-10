@@ -35,13 +35,13 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 		}
 
 		// Sending "wireless mode" as "capsman-manager"
-		$_OUT[] = prom(PREFIX.'_wireless', $_ARR_COLL + array('mode' => 'capsman-manager'), 1);
+		$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'], $_ARR_COLL + array('mode' => 'capsman-manager'), 1);
 
 		// result is an array of arrays
 		foreach ($result as $key => $w_client) {
 			// Bind all values to static:
 			$labels = array('interface' => $w_client['interface'], 'ssid' => $w_client['ssid'], 'mac_address' => $w_client['mac-address']);
-			$_OUT[] = prom(PREFIX.'_wireless_client', $_ARR_COLL + $labels, 1);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'], $_ARR_COLL + $labels, 1);
 		}
 	} else {
 		// N: Checking if wireless-cap is enabled
@@ -55,10 +55,10 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 		if ($result[0]['enabled'] == 'true') {
 			// This is a capsman-client-device. Just notify about this
 			// Sending "wireless mode" as "capsman-client"
-			$_OUT[] = prom(PREFIX.'_wireless', $_ARR_COLL + array('mode' => 'capsman-client'), 1);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'], $_ARR_COLL + array('mode' => 'capsman-client'), 1);
 		} else {
 			// Sending "wireless mode" as "standalone"
-			$_OUT[] = prom(PREFIX.'_wireless', $_ARR_COLL + array('mode' => 'standalone'), 1);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'], $_ARR_COLL + array('mode' => 'standalone'), 1);
 
 			// Standalone wireless-router/access-point. Collecting in a usual way
 			$cmd = '/interface/wireless/registration-table/print';
@@ -71,7 +71,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 			foreach ($result as $key => $w_client) {
 				// Bind all values to static:
 				$labels = array('interface' => $w_client['interface'], 'ssid' => $w_client['ssid'], 'mac_address' => $w_client['mac-address']);
-				$_OUT[] = prom(PREFIX.'_wireless_client', $_ARR_COLL + $labels, 1);
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client', $_ARR_COLL + $labels, 1);
 			}
 		}
 	}

@@ -41,7 +41,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 		foreach ($result as $key => $w_client) {
 			// Bind all values to static:
 			$labels = array('interface' => $w_client['interface'], 'ssid' => $w_client['ssid'], 'mac_address' => $w_client['mac-address']);
-			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'], $_ARR_COLL + $labels, 1);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client', $_ARR_COLL + $labels, 1);
 		}
 	} else {
 		// N: Checking if wireless-cap is enabled

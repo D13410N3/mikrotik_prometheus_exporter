@@ -38,7 +38,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_neighbor_state_changes', $_ARR_COLL + $labels, $neighbor['state-changes']);
 			// Convert awful mikrotik-date to seconds:
 			$value = mikrotik_time($neighbor['adjacency']);
-			$_OUT[] prom(PREFIX.'_'.$_COLLECTOR['name'].'_neighbor_adjacency', $_ARR_COLL + $labels, $value);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_neighbor_adjacency', $_ARR_COLL + $labels, $value);
 		}
 	}
 	

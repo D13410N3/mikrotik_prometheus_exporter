@@ -43,7 +43,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 			$value = array();
 			$value['rx'] = mikrotik_traffic($peer['rx']);
 			$value['tx'] = mikrotik_traffic($peer['tx']);
-			$value['last_handshake'] = mikrotik_time($peer['last-handshake']);
+			$value['last_handshake'] = isset($peer['last-handshake']) ? mikrotik_time($peer['last-handshake']) : 0;
 			$value['status'] = $peer['disabled'] == 'false' ? 1 : 0;
 			
 			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_status', $_ARR_COLL + $labels, $value['status']);

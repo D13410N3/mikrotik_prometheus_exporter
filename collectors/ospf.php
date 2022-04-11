@@ -2,7 +2,7 @@
 // Collector name
 $_COLLECTOR['enable'] = 1;
 $_COLLECTOR['name'] = 'ospf';
-$_COLLECTOR['cmd'] = '/routing/ospf/neighbor';
+$_COLLECTOR['cmd'] = '/routing/ospf/neighbor/print';
 if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] == 1) {
 	$_coll_start_time = microtime(true);
 	

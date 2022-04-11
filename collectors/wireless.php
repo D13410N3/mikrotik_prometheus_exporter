@@ -47,7 +47,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_uptime', $_ARR_COLL + $labels, $value);
 
 			// Getting signal:
-			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_signal', $_ARR_COLL + $labels, $w_client['signal']);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_rx_signal', $_ARR_COLL + $labels, $w_client['rx-signal']);
 
 			// Getting packets:
 			list($value_tx, $value_rx) = explode(',', $w_client['packets']);
@@ -93,7 +93,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_uptime', $_ARR_COLL + $labels, $value);
 
 				// Getting signal:
-				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_signal', $_ARR_COLL + $labels, $w_client['signal']);
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_rx_signal', $_ARR_COLL + $labels, $w_client['rx-signal']);
 
 				// Getting packets:
 				list($value_tx, $value_rx) = explode(',', $w_client['packets']);

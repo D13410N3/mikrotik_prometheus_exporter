@@ -39,9 +39,25 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 
 		// result is an array of arrays
 		foreach ($result as $key => $w_client) {
-			// Bind all values to static:
+			// Bind all labels to static:
 			$labels = array('interface' => $w_client['interface'], 'ssid' => $w_client['ssid'], 'mac_address' => $w_client['mac-address']);
-			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client', $_ARR_COLL + $labels, 1);
+
+			// Getting uptime:
+			$value = mikrotik_time($w_client['uptime']);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_uptime', $_ARR_COLL + $labels, $value);
+
+			// Getting signal:
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_signal', $_ARR_COLL + $labels, $w_client['signal']);
+
+			// Getting packets:
+			list($value_tx, $value_rx) = explode(',', $w_client['packets']);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_tx_packets', $_ARR_COLL + $labels, $value_tx);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_rx_packets', $_ARR_COLL + $labels, $value_rx);
+
+			// Getting bytes:
+			list($value_tx, $value_rx) = explode(',', $w_client['bytes']);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_tx_bytes', $_ARR_COLL + $labels, $value_tx);
+			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_rx_bytes', $_ARR_COLL + $labels, $value_rx);
 		}
 	} else {
 		// N: Checking if wireless-cap is enabled
@@ -69,9 +85,25 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 			}
 
 			foreach ($result as $key => $w_client) {
-				// Bind all values to static:
+				// Bind all labels to static:
 				$labels = array('interface' => $w_client['interface'], 'ssid' => $w_client['ssid'], 'mac_address' => $w_client['mac-address']);
-				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client', $_ARR_COLL + $labels, 1);
+
+				// Getting uptime:
+				$value = mikrotik_time($w_client['uptime']);
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_uptime', $_ARR_COLL + $labels, $value);
+
+				// Getting signal:
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_signal', $_ARR_COLL + $labels, $w_client['signal']);
+
+				// Getting packets:
+				list($value_tx, $value_rx) = explode(',', $w_client['packets']);
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_tx_packets', $_ARR_COLL + $labels, $value_tx);
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_rx_packets', $_ARR_COLL + $labels, $value_rx);
+
+				// Getting bytes:
+				list($value_tx, $value_rx) = explode(',', $w_client['bytes']);
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_tx_bytes', $_ARR_COLL + $labels, $value_tx);
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_client_rx_bytes', $_ARR_COLL + $labels, $value_rx);
 			}
 		}
 	}

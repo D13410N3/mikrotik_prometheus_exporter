@@ -25,7 +25,11 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 		// Saving fields: address, mac-address, server
 		// 1st foreach: all clients to one client:
 		foreach ($result as $key => $lease) {
+			// labels to add 
 			$labels = array('address' => $lease['address'], 'mac_address' => $lease['mac-address'], 'server' => $lease['server']);
+			// this labels can be empty
+			$labels['client_hostname'] = isset($lease['host-name']) ? preg_replace('#[^0-9a-zA-Z\.\-\_\s]#', '', $lease['host-name']) : '';
+			$labels['comment'] = isset($lease['comment']) ?  preg_replace('#[^0-9a-zA-Z\.\-\_\s]#', '', $lease['comment']) : '';
 			$value = $lease['status'] == 'bound' ? 1 : 0;
 			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'], $_ARR_COLL + $labels, $value);
 		}

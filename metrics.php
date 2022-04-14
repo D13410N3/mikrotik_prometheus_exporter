@@ -93,10 +93,15 @@ if (isset($_GET['ip'])) {
 		require_once $collector_file;
 	}
 	
+	// saving last-check time
+	$_last_check = time();
+	$_OUT[] = prom(PREFIX.'_global_last_scrape_time', $_ARR, $_last_check);
+	
 	// Counting scrape_time
 	$_end_time = microtime(true);
 	$scrape_time = round($_end_time - $_start_time, 7) * 1000;
 	$_OUT[] = prom(PREFIX.'_global_scrape_time', $_ARR, $scrape_time);
+	
 	
 	// Outputing the result
 	$_OUT[] = PHP_EOL;

@@ -25,8 +25,10 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 		// Saving fields: address, mac-address, server
 		// 1st foreach: all clients to one client:
 		foreach ($result as $key => $sensor) {
-			$labels = array('sensor' => $sensor['name']);
-			$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'], $_ARR_COLL + $labels, (float)$sensor['value']);
+			if (isset($sensor['name'])) {
+				$labels = array('sensor' => $sensor['name']);
+				$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'], $_ARR_COLL + $labels, (float)$sensor['value']);
+			}
 		}
 	}
 	

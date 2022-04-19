@@ -44,7 +44,11 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 								case '10Mbps':		$new_value = 10;		break;
 								case '100Mbps':		$new_value = 100;		break;
 								case '1Gbps':		$new_value = 1000; 		break;
+								case '2.5Gbps':		$new_value = 1000; 		break;
+								case '5Gbps':		$new_value = 5000; 		break;
 								case '10Gbps':		$new_value = 10000;		break;
+								case '25Gbps':		$new_value = 25000;		break;
+								case '40Gbps':		$new_value = 40000;		break;
 								default: 			$new_value = 1000;		break;
 							}
 							

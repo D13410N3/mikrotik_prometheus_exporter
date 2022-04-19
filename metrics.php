@@ -77,26 +77,31 @@ if (isset($_GET['ip'])) {
 	$_API = new routeros_api();
 	$conn = $_API -> connect($_DEVICE['ip'], $_DEVICE['port'], $_DEVICE['username'], $_DEVICE['password']);
 	
+	$_OUT = array();
+	
 	// Throwing an error if something went wrong
 	if ($conn == false) {
-		die('Error connecting to device '.$_DEVICE['ip'].':'.$_DEVICE['port'].' with username '.$_DEVICE['username']);
+		$_OUT[] = prom(PREFIX.'_global_status', $_ARR, 0);
+	} else {
+		// Connection successful - time to start collecting information
+		$_ARR = array('ip' => $_IP, 'hostname' => $_DEVICE['name'], 'location' => $_DEVICE['location']);
+		
+		$_OUT[] = prom(PREFIX.'_global_status', $_ARR, 1);
+		
+		// Requiring collectors
+		foreach (glob('collectors/*.php') as $collector_file) {
+			require_once $collector_file;
+		}
 	}
-	
-	// Connection successful - time to start collecting information
-	$_OUT = array();
-	$_ARR = array('ip' => $_IP, 'hostname' => $_DEVICE['name'], 'location' => $_DEVICE['location']);
-	
-	$_OUT[] = prom(PREFIX.'_global_status', $_ARR, 1);
-	
-	// Requiring collectors
-	foreach (glob('collectors/*.php') as $collector_file) {
-		require_once $collector_file;
-	}
+	// saving last-check time
+	$_last_check = time();
+	$_OUT[] = prom(PREFIX.'_global_last_scrape_time', $_ARR, $_last_check);
 	
 	// Counting scrape_time
 	$_end_time = microtime(true);
 	$scrape_time = round($_end_time - $_start_time, 7) * 1000;
-	$_OUT[] = prom(PREFIX.'_global_scrape_time', $_ARR, $scrape_time);
+	$_OUT[] = prom(PREFIX.'_global_scrape_duration', $_ARR, $scrape_time);
+	
 	
 	// Outputing the result
 	$_OUT[] = PHP_EOL;

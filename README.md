@@ -88,7 +88,14 @@ These metrics are enabled for all added devices
 | `mikrotik_global_scrape_duration` | Return scrape time for this device | Time interval in msec |
 | `mikrotik_global_last_scrape_time` | Return unixtime of last scrape completion |
 
-## Collectors
+Each collector contains label `collector_name` and some additional metrics
+
+| Name | Description | Output value type |
+| ---- | ----------- | ----------------- |
+| `mikrotik_collector_scrape_duration` | Return scrape time for this collector | Time interval in msec |
+| `mikrotik_collector_error` | Returns error text as a label `error` | `1` |
+
+## Basic
 
 | Name | Description |
 | ---- | ----------- |
@@ -105,11 +112,3 @@ These metrics are enabled for all added devices
 | Name | Description |
 | ---- | ----------- |
 | [int_ethernet](md/int_ethernet.md) | Extended Ethernet stats (including sfp/sfp-sfpplus ports) |
-
-
-Each collector contains label `collector_name` and some additional metrics
-
-| Name | Description | Output value type |
-| ---- | ----------- | ----------------- |
-| `mikrotik_collector_scrape_duration` | Return scrape time for this collector | Time interval in msec |
-| `mikrotik_collector_error` | Returns error text as a label `error` | `1` |

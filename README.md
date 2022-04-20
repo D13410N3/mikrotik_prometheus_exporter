@@ -112,3 +112,10 @@ Each collector contains label `collector_name` and some additional metrics
 | Name | Description |
 | ---- | ----------- |
 | [int_ethernet](docs/int_ethernet.md) | Extended Ethernet stats (including sfp/sfp-sfpplus ports) |
+
+
+# Debug
+
+You can run exporter via cli using this syntax:
+- `php metrics.php 10.100.0.1` - returns default metrics output
+- `php metrics.php 10.100.0.1 interface` - return var_dump() of Mikrotik API response and print default metrics output

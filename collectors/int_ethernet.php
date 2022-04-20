@@ -83,6 +83,11 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 							$value = $new_value;
 						}
 						
+						// Replacing power-cycle interval
+						if ($metric_name == 'power-cycle-interval' OR $metric_name == 'power-cycle-ping-timeout') {
+							$value = $value == 'none' ? '0' : mikrotik_time($value);
+						}
+						
 						// Checking if value is int or float; if it is - we're using it as a real value. Also checking if it's true/false and replacing it with 1/0
 						if (is_numeric($value)) {
 							$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_'.$mt, $_ARR_COLL + array('interface_name' => $interface['name']), $value);

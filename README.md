@@ -1,11 +1,17 @@
 # mikrotik_prometheus_exporter
 Simple Mikrotik-devices importer for Prometheus (under development)
 
+## Features
+- Devices segregation by location-label
+- Each device can be set to use all collectors or only some of them
+- All configuration are set in one file (see `db.sample.yml` for an example)
+
+Docker-container will be provided later - but if you want, you can [help me with this](https://t.me/d13410n3)
 
 ## Requirements
 It doesn't work as standalone-application - some kind of web-server required (tested with nginx).
 
-Requirements - PHP 7+ with `curl` module, Web-server
+Requirements - PHP 7+ with `curl` module, Web-server. All collectors are tested only with RouterOS version 7
 
 
 ## Preparation
@@ -114,7 +120,7 @@ Each collector contains label `collector_name` and some additional metrics
 | [int_ethernet](docs/int_ethernet.md) | Extended Ethernet stats (including sfp/sfp-sfpplus ports) |
 
 
-# Debug
+## Debug
 
 You can run exporter via cli using this syntax:
 - `php metrics.php 10.100.0.1` - returns default metrics output

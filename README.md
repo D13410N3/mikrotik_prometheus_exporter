@@ -59,10 +59,35 @@ server
 }
 ```
 
+
+
 # Collectors
 This list is not completed - development is still under process
 
-## Basic
+## Prefix for metrics
+You can set your own metrics prefix by edition `define('PREFIX', 'mikrotik');` in `init.php`. Examples contains `mikrotik` as a default prefix.
+
+## Global
+
+### Labels
+All metrics contains these labels. They are taken from `db.yml`, not from device
+
+| Label name | Description | Example value |
+| ---------- | ----------- | ------------- |
+| `ip` | Device IP | `10.100.0.1` |
+| `hostname` | Device hostname | `Msk-R1` |
+| `location` | Device location | `Moscow` |
+
+### Basic metrics
+These metrics are enabled for all added devices
+
+| Metric name | Description | Output value type |
+| ----------- | ----------- | -------------------- |
+| mikrotik_global_status | Availability of device. Useless at this moment (if device is not enabled - die() function works | `0`/`1` |
+| mikrotik_global_scrape_duration | Return scrape time for this device | Time in msec |
+| mikrotik_global_last_scrape_time | Return unixtime of last scrape completion |
+
+## Collectors
 
 | Name | Description |
 | ---- | ----------- |

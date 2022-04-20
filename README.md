@@ -99,16 +99,16 @@ Each collector contains label `collector_name` and some additional metrics
 
 | Name | Description |
 | ---- | ----------- |
-| [dhcp_lease](md/dhcp_lease.md) | DHCP clients |
-| [interface](md/interface.md) | Summary stats for all interfaces (common values) |
-| [ospf](md/ospf.md) | OSPF neighbors stats |
-| [resource](md/resource.md) | Information from section "resources" (CPU, RAM, OS version etc.) |
-| [sensors](md/sensors.md) | Sensors (e.g. input voltage, temperature) |
-| [wireguard](md/wireguard.md) | Wireguard peers information |
-| [wireless](md/wireguard.md) | Wireless clients (support standalone & capsman modes) |
+| [dhcp_lease](docs/dhcp_lease.md) | DHCP clients |
+| [interface](docs/interface.md) | Summary stats for all interfaces (common values) |
+| [ospf](docs/ospf.md) | OSPF neighbors stats |
+| [resource](docs/resource.md) | Information from section "resources" (CPU, RAM, OS version etc.) |
+| [sensors](docs/sensors.md) | Sensors (e.g. input voltage, temperature) |
+| [wireguard](docs/wireguard.md) | Wireguard peers information |
+| [wireless](docs/wireguard.md) | Wireless clients (support standalone & capsman modes) |
 
 ## Interfaces-group collectors
 
 | Name | Description |
 | ---- | ----------- |
-| [int_ethernet](md/int_ethernet.md) | Extended Ethernet stats (including sfp/sfp-sfpplus ports) |
+| [int_ethernet](docs/int_ethernet.md) | Extended Ethernet stats (including sfp/sfp-sfpplus ports) |

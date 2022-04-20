@@ -84,9 +84,9 @@ These metrics are enabled for all added devices
 
 | Metric name | Description | Output value type |
 | ----------- | ----------- | -------------------- |
-| mikrotik_global_status | Availability of device. Useless at this moment (if device is not enabled - die() function works | `0`/`1` |
-| mikrotik_global_scrape_duration | Return scrape time for this device | Time in msec |
-| mikrotik_global_last_scrape_time | Return unixtime of last scrape completion |
+| `mikrotik_global_status` | Availability of device. Useless at this moment (if device is not enabled - die() function works | `0`/`1` |
+| `mikrotik_global_scrape_duration` | Return scrape time for this device | Time interval in msec |
+| `mikrotik_global_last_scrape_time` | Return unixtime of last scrape completion |
 
 ## Collectors
 
@@ -105,3 +105,10 @@ These metrics are enabled for all added devices
 | Name | Description |
 | ---- | ----------- |
 | [int_ethernet](md/int_ethernet.md) | Extended Ethernet stats (including sfp/sfp-sfpplus ports) |
+
+
+Each collector contains label `collector_name` and some additional metrics
+
+| Name | Description | Output value type |
+| `mikrotik_collector_scrape_duration` | Return scrape time for this collector | Time interval in msec |
+| `mikrotik_collector_error` | Returns error text as a label `error` | `1` |

@@ -6,9 +6,7 @@ This collector contains all metrics from ethernet & sfp interfaces. Availability
 
 | Name | Description | Example value |
 | ---- | ----------- | ------------- |
-| `interface` | Name of wlan or cap interface | `wlan1`, `5G-Home-W2-1` |
-| `ssid` | SSID for this client | `ASUS-5G` |
-| `mac_address` | This client MAC-address | `AA:BB:CC:DD:EE:FF` |
+| `interface_тфьу` | Name of ethernet-interface | `ether1`, `sfp1`, `sfp-sfpplus1` |
 
 
 ## Metrics

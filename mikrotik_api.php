@@ -18,7 +18,7 @@
 
 function mikrotik_time($string = '1d') {
 	$times = array('w' => 604800, 'd' => 86400, 'h' => 3600, 'm' => 60, 's' => 1, 'ms' => 0);
-	preg_match_all('#(\d+)(w|d|h|ms|m)#', $string, $parse);
+	preg_match_all('#(\d+)(w|d|h|m|s|ms)#', $string, $parse);
 	$sec = 0;
 	
 	foreach ($parse[1] as $key => $value) {

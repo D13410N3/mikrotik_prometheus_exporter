@@ -55,6 +55,23 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 							$value = $new_value;
 						}
 						
+						// Replacing awful time-interval value
+						if ($metric_name == 'loop-protect-send-interval' OR $metric_name == 'loop-protect-disable-time') {
+							$value = mikrotik_time($value);
+						}
+						
+						// Replacing loop-protect status
+						if ($metric_name == 'loop-protect' OR $metric_name == 'loop-protect-status') {
+							switch($value) {
+								case 'on':			$new_value = 1;			break;
+								case 'off':			$new_value = 0;			break;
+								case 'default':		$new_value = 1;			break;
+								default:			$new_value = 1;			break;
+							}
+							
+							$value = $new_value;
+						}
+						
 						// Checking if value is int or float; if it is - we're using it as a real value. Also checking if it's true/false and replacing it with 1/0
 						if (is_numeric($value)) {
 							$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_'.$mt, $_ARR_COLL + array('interface_name' => $interface['name']), $value);

@@ -20,7 +20,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 	}
 	
 	if (empty($res)) {
-		$_OUT[] = prom('mt_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response'), 1);
+		$_OUT[] = prom(PREFIX.'_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response'), 1);
 	} else {
 		if ($_COLLECTOR['enable'] == 1) {
 			// Just foreach every string excepting some fields

@@ -110,5 +110,6 @@ These metrics are enabled for all added devices
 Each collector contains label `collector_name` and some additional metrics
 
 | Name | Description | Output value type |
+| ---- | ----------- | ----------------- |
 | `mikrotik_collector_scrape_duration` | Return scrape time for this collector | Time interval in msec |
 | `mikrotik_collector_error` | Returns error text as a label `error` | `1` |

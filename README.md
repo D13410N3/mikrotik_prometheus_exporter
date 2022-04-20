@@ -1,14 +1,14 @@
 # mikrotik_prometheus_exporter
-Simple Mikrotik-devices importer for Prometheus
+Simple Mikrotik-devices importer for Prometheus (under development)
 
 
-# Requirements
+## Requirements
 It doesn't work as standalone-application - some kind of web-server required (tested with nginx).
 
 Requirements - PHP 7+ with `curl` module, Web-server
 
 
-# Preparation
+## Preparation
 - Clone this repository to a web-server-dir (e.g. `/var/html`)
 - Enable API (not SSL-api) on your Mikrotik-device
 - Add read-only user
@@ -16,7 +16,7 @@ Requirements - PHP 7+ with `curl` module, Web-server
 - Create & fill file `db.yml` with credentials from your devices. Use `db.sample.yml` as an example. *Don't forget to restrict direct access to this file!*
 
 
-# Prometheus configuration
+## Prometheus configuration
 Example:
 ```
   - job_name: mikrotik
@@ -28,7 +28,7 @@ Example:
           - 10.100.0.1
           - 10.100.0.6
         labels:
-          __tmp_exporter: localhost:1490
+          __tmp_exporter: localhost:9180
 
     relabel_configs:
       -
@@ -42,7 +42,22 @@ Example:
         target_label: __address__
         replacement: ${1}
 ```
+This config will scrape two Mikrotik-devices with addresses `10.100.0.1` and `10.100.0.6` using web-requests:
+`http://localhost:9180/new/metrics/10.100.0.1`
+`http://localhost:9180/new/metrics/10.100.0.6`
 
+## Web-server configuration
+Nginx example:
+```
+server
+{
+        listen 1488 default;
+        set $doc_root '/var/www/mikrotik_prometheus_exporter';
+        include /etc/nginx/with-fcgi.conf; // This file contains common PHP-FPM directives
+        rewrite "^/metrics$" /metrics.php;
+        rewrite "^/new/metrics/(.*?)$" /new/metrics.php?ip=$1;
+}
+```
 
 # Collectors
 This list is not completed - development is still under process
@@ -63,4 +78,4 @@ This list is not completed - development is still under process
 
 | Name | Description |
 | ---- | ----------- |
-| int_ethernet | Extended Ethernet stats (including sfp/sfp-sfpplus ports) |
+| [int_ethernet](md/int_ethernet.md) | Extended Ethernet stats (including sfp/sfp-sfpplus ports) |

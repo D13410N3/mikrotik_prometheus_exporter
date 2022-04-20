@@ -60,8 +60,8 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 							$value = mikrotik_time($value);
 						}
 						
-						// Replacing loop-protect status
-						if ($metric_name == 'loop-protect' OR $metric_name == 'loop-protect-status') {
+						// Replacing loop-protect and flow-control status
+						if (in_array($metric_name, array('loop-protect', 'loop-protect-status', 'tx-flow-control', 'rx-flow-control'))) {
 							switch($value) {
 								case 'on':			$new_value = 1;			break;
 								case 'off':			$new_value = 0;			break;

@@ -42,9 +42,10 @@ Example:
         target_label: __address__
         replacement: ${1}
 ```
-This config will scrape two Mikrotik-devices with addresses `10.100.0.1` and `10.100.0.6` using web-requests:
-`http://localhost:9180/new/metrics/10.100.0.1`
-`http://localhost:9180/new/metrics/10.100.0.6`
+This config will scrape two Mikrotik-devices with addresses `10.100.0.1` and `10.100.0.6` using URLs:
+- `http://localhost:9180/new/metrics/10.100.0.1`
+- `http://localhost:9180/new/metrics/10.100.0.6`
+... every 30 seconds with 10 seconds timeout
 
 ## Web-server configuration
 Nginx example:

@@ -1,6 +1,6 @@
 # Basic interface metrics
 
-This collector specific common interface metrics that are applied to all types of interfaces, but availability of some metrics may vary
+This collector contains common interface metrics that are applied to all types of interfaces, but availability of some metrics may vary
 
 ## Specific labels
 

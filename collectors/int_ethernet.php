@@ -29,7 +29,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 			foreach ($result as $key => $interface) {
 				// 2nd foreach: separate interface - sending all excluding interface name, type (it will be added for every metric string) and .id (it smells like shit)
 				// We need to set something to comment if it's not set. At least, until I'll find JOIN LEFT solution
-				if (!isset($interface['comment'])) $interface['comment'] = '';
+				// if (!isset($interface['comment'])) $interface['comment'] = '';
 				foreach ($interface as $metric_name => $value) {
 					if ($metric_name != 'name' && $metric_name != 'type' && $metric_name != '.id') {
 						// replacing '-' and '.' with '_'

@@ -40,6 +40,19 @@ function mikrotik_traffic($string = 0) {
 	return $result;
 }
 
+// Function to convert version-string to an integer (including specific Mikrotik stuff)
+function version_convertor($version = '1.0') {
+	$nums = explode('.', preg_replace('#[^0-9\.]#', '', $version));
+	$c_digits = count($nums);
+	$out = 0;
+	for ($i = 1; $i <= $c_digits; $i++) {
+		$pow = abs($i - 3);
+		$out += $nums[$i - 1] * pow(1000, $pow);
+	}
+	return $out;
+}
+		
+
 class Routeros_API
 {
     var $debug     = false; //  Show debug information

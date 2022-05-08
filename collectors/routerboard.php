@@ -1,8 +1,8 @@
 <?php
 // Collector name
 $_COLLECTOR['enable'] = 1;
-$_COLLECTOR['name'] = 'resource';
-$_COLLECTOR['cmd'] = '/system/resource/print';
+$_COLLECTOR['name'] = 'routerboard';
+$_COLLECTOR['cmd'] = '/system/routerboard/print';
 if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 	$_coll_start_time = microtime(true);
 	
@@ -29,15 +29,8 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 				$mt = str_replace('-', '_', str_replace('.', '_', $metric_name));
 				
 				// Including version number as integer
-				if ($metric_name == 'version') {
+				if ($metric_name == 'factory-firmware' | $metric_name == 'current-firmware' | $metric_name == 'upgrade-firmware') {
 					$value = version_convertor($value);
-				}
-				
-				// Replacing awful date-format
-				if ($metric_name == 'uptime') {
-					$value = mikrotik_time($value);
-				} elseif ($metric_name == 'build-time') {
-					$value = DateTime::createFromFormat('M/d/Y H:i:s', $value) -> getTimestamp();
 				}
 				
 				// Checking if value is int or float; if it is - we're using it as a real value

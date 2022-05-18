@@ -6,7 +6,7 @@ This collector contains all metrics from ethernet & sfp interfaces. Availability
 
 | Name | Description | Example value |
 | ---- | ----------- | ------------- |
-| `interface_тфьу` | Name of ethernet-interface | `ether1`, `sfp1`, `sfp-sfpplus1` |
+| `interface_name` | Name of ethernet-interface | `ether1`, `sfp1`, `sfp-sfpplus1` |
 
 
 ## Metrics

@@ -51,6 +51,22 @@ function version_convertor($version = '1.0') {
 	}
 	return $out;
 }
+
+// Function to convert link-speed to a numeric value
+function mikrotik_link_speed($value = '100Mbps') {
+	switch($value) {
+		case '10Mbps':		return 10;
+		case '100Mbps':		return 100;
+		case '1Gbps':		return 1000; 
+		case '2.5Gbps':		return 1000; 
+		case '5Gbps':		return 5000; 
+		case '10Gbps':		return 10000;
+		case '25Gbps':		return 25000;
+		case '25Gbps':		return 28000;
+		case '40Gbps':		return 40000;
+		default: 			return 0;
+	}
+}
 		
 
 class Routeros_API

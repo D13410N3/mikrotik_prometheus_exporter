@@ -49,6 +49,10 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 						}
 					}
 				}
+				// Checking if "comment" is set. If not - adding "none" comment (label) with value "0"
+				if (empty($interface['comment'])) {
+					$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_comment', $_ARR_COLL + array('interface_name' => $interface['name'], 'interface_type' => $interface['type'], 'value' => 'none'), 0);
+				}
 				// Adding string between interfaces
 				$_OUT[] = PHP_EOL;
 			}

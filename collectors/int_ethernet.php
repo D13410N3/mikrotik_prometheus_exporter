@@ -122,7 +122,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 				
 			
 		} elseif ($_DEBUG === true) {
-			var_dump($result); die;
+			var_dump($result);
 		}
 	}
 	

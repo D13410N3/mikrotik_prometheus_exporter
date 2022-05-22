@@ -26,12 +26,16 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 			
 			// Just foreach every string excepting some fields
 			// 1st foreach: list of interfaces
+			// Collecting interface-names as an array - this will help us to use "monitor" function. We need it to get actual link speed
+			$_names = array();
 			foreach ($result as $key => $interface) {
+				$_names[] = $interface['name'];
 				// 2nd foreach: separate interface - sending all excluding interface name, type (it will be added for every metric string) and .id (it smells like shit)
 				// We need to set something to comment if it's not set. At least, until I'll find JOIN LEFT solution
 				// if (!isset($interface['comment'])) $interface['comment'] = '';
+				
 				foreach ($interface as $metric_name => $value) {
-					if ($metric_name != 'name' && $metric_name != 'type' && $metric_name != '.id') {
+					if ($metric_name != 'name' && $metric_name != 'type' && $metric_name != '.id' && $metric_name != 'full-duplex') {
 						// replacing '-' and '.' with '_'
 						$mt = str_replace('-', '_', str_replace('.', '_', $metric_name));
 						
@@ -42,19 +46,7 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 						
 						// Replacing link_speed to a numeric-value
 						if ($metric_name == 'speed') {
-							switch($value) {
-								case '10Mbps':		$new_value = 10;		break;
-								case '100Mbps':		$new_value = 100;		break;
-								case '1Gbps':		$new_value = 1000; 		break;
-								case '2.5Gbps':		$new_value = 1000; 		break;
-								case '5Gbps':		$new_value = 5000; 		break;
-								case '10Gbps':		$new_value = 10000;		break;
-								case '25Gbps':		$new_value = 25000;		break;
-								case '40Gbps':		$new_value = 40000;		break;
-								default: 			$new_value = 1000;		break;
-							}
-							
-							$value = $new_value;
+							$value = mikrotik_link_speed($value);
 						}
 						
 						// Replacing awful time-interval value
@@ -105,8 +97,32 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS)) {
 				// Adding string between interfaces
 				$_OUT[] = PHP_EOL;
 			}
+			
+			// Collecting "monitor" stats to add actual speed & duplex
+			$ether_int_list = implode(',', $_names);
+			// die($ether_int_list);
+			$cmd_monitor = '/interface/ethernet/monitor'.PHP_EOL.'=numbers='.$ether_int_list.PHP_EOL.'=once='.PHP_EOL.'=.proplist=name,status,rate,full-duplex';
+			$result = $_API -> comm($cmd_monitor);
+			if (empty($result)) {
+				$_OUT[] = prom(PREFIX.'_collector_error', $_ARR_COLL + array('error' => 'Device had sent empty response (monitor)'), 1);
+			} else {
+				foreach ($result as $key => $value) {
+					if ($value['status'] != 'no-link') {
+						// link is ok, collecting data
+						// Sometimes rate is not defined and "full-duplex" is "false". In my case it was on CHR with vmware
+						if (!empty($value['rate'])) {
+							// Actual speed
+							$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_actual_speed', $_ARR_COLL + array('interface_name' => $value['name']), mikrotik_link_speed($value['rate']));
+							// Duplex
+							$_OUT[] = prom(PREFIX.'_'.$_COLLECTOR['name'].'_full_duplex', $_ARR_COLL + array('interface_name' => $value['name']), ($value['full-duplex'] == 'true' ? 1 : 0));
+						}
+					}
+				}
+			}
+				
+			
 		} elseif ($_DEBUG === true) {
-			var_dump($result);
+			var_dump($result); die;
 		}
 	}
 	

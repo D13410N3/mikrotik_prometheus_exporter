@@ -23,7 +23,7 @@ Requirements - PHP 7+ with `curl` module, Web-server. All collectors are tested 
 
 
 ## Prometheus configuration
-Example:
+Scraping example:
 ```
   - job_name: mikrotik
     scrape_interval: 30s
@@ -52,6 +52,11 @@ This config will scrape two Mikrotik-devices with addresses `10.100.0.1` and `10
 - `http://localhost:9180/new/metrics/10.100.0.1`
 - `http://localhost:9180/new/metrics/10.100.0.6`
 ... every 30 seconds with 10 seconds timeout
+
+Alerting example:
+
+[rules_mt.yml](rules_mt.yml)
+
 
 ## Web-server configuration
 Nginx example:

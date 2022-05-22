@@ -31,10 +31,10 @@ Some of these metrics return their value with label `value`
 | `mikrotik_int_ethernet_loop_protect_disable_time` | Interval when interface will stay disabled if loop occures (in seconds) | `300` |
 | `mikrotik_int_ethernet_auto_negotiation` | Auto Negotiation status | `1` or `0` |
 | `mikrotik_int_ethernet_advertise` | Advertise list as a label, comma-separated | `1` always if set |
-| `mikrotik_int_ethernet_full_duplex` | Full-duplex status | `1` or `0` |
+| `mikrotik_int_ethernet_full_duplex` | Full-duplex theoretical maximum state (full-duplex or nothing) | `1` or `0` |
 | `mikrotik_int_ethernet_tx_flow_control` | Flow-control status for transmit-packets | `1` or `0` |
 | `mikrotik_int_ethernet_rx_flow_control` | Flow-control status for received-packets | `1` or `0` |
-| `mikrotik_int_ethernet_speed` | Actual physical link speed | `10`, `100`, `1000`, `2500` (not tested), `5000` (n.t.), `10000`, `25000` (n.t.), `40000` (n.t.) respectively for `10M`, `100M`, `1G`, `2.5G`, `5G`, `10G`, `25G`, `40G` |
+| `mikrotik_int_ethernet_speed` | Physical link maximum speed | `10`, `100`, `1000`, `2500` (not tested), `5000` (n.t.), `10000`, `25000` (n.t.), `40000` (n.t.) respectively for `10M`, `100M`, `1G`, `2.5G`, `5G`, `10G`, `25G`, `40G` |
 | `mikrotik_int_ethernet_bandwidth` | RX/TX bandwith (set) as a label | Currently returns only `unlimited/unlimited` |
 | `mikrotik_int_ethernet_switch` | Switch name as a label | `switch1` |
 | `mikrotik_int_ethernet_driver_rx_byte` | Some kind (???????) of received bytes | `88254385` |
@@ -93,3 +93,5 @@ Some of these metrics return their value with label `value`
 | `mikrotik_int_ethernet_tx_late_collision` | Number of transmitted packets with late collision | `0` |
 | `mikrotik_int_ethernet_tx_deferred` | Number of transmitted deferred packets | `0` |
 | `mikrotik_int_ethernet_comment` | Comment for this interface as a label | `1` always if set |
+| `mikrotik_int_ethernet_actual_speed` | Physical link actual speed | `10`, `100`, `1000`, `2500` (not tested), `5000` (n.t.), `10000`, `25000` (n.t.), `40000` (n.t.) respectively for `10M`, `100M`, `1G`, `2.5G`, `5G`, `10G`, `25G`, `40G` |
+| `mikrotik_int_ethernet_full_duplex` | Full-duplex state | `1` or `0` |

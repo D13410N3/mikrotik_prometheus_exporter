@@ -79,13 +79,14 @@ if (isset($_GET['ip'])) {
 	
 	$_OUT = array();
 	
+	// Create predefined labels list
+	$_ARR = array('ip' => $_IP, 'hostname' => $_DEVICE['name'], 'location' => $_DEVICE['location']);
+	
 	// Throwing an error if something went wrong
 	if ($conn == false) {
 		$_OUT[] = prom(PREFIX.'_global_status', $_ARR, 0);
 	} else {
 		// Connection successful - time to start collecting information
-		$_ARR = array('ip' => $_IP, 'hostname' => $_DEVICE['name'], 'location' => $_DEVICE['location']);
-		
 		$_OUT[] = prom(PREFIX.'_global_status', $_ARR, 1);
 		
 		// Requiring collectors

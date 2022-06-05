@@ -16,7 +16,7 @@ function prom($name = PREFIX.'_default', $args = array('error' => 'Check prom-fu
 		$_args[] = $key.'="'.$arg.'"';
 	}
 	
-	return $name.' {'.implode(', ', $_args).'} '.$value;
+	return $name.'{'.implode(', ', $_args).'} '.$value;
 }
 
 // Function to decide if there's a need to use this collector

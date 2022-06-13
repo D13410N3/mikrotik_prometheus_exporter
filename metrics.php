@@ -80,7 +80,10 @@ if (isset($_GET['ip'])) {
 	$_OUT = array();
 	
 	// Create predefined labels list
-	$_ARR = array('ip' => $_IP, 'hostname' => $_DEVICE['name'], 'location' => $_DEVICE['location']);
+	#$_ARR = array('ip' => $_IP, 'hostname' => $_DEVICE['name'], 'location' => $_DEVICE['location']);
+	
+	# Removed hostname & replace it with prom relabeling
+	$_ARR = array('location' => $_DEVICE['location']);
 	
 	// Throwing an error if something went wrong
 	if ($conn == false) {

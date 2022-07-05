@@ -6,7 +6,12 @@ Simple Mikrotik-devices importer for Prometheus (under development)
 - Each device can be set to use all collectors or only some of them
 - All configuration are set in one file (see `db.sample.yml` for an example)
 
-Docker-container will be provided later - but if you want, you can [help me with this](https://t.me/d13410n3)
+## db.yml example
+View file (db.sample.yml)[db.sample.yml]
+
+## Quick run with docker
+- Create `db.yml` file
+- `docker run --name mikrotik_exporter -d -p 9937:80 -v /path/to/db.yml:/www/db.yml d13410n3/mikrotik_exporter:v1`
 
 ## Requirements
 It doesn't work as standalone-application - some kind of web-server required (tested with nginx).

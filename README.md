@@ -65,7 +65,7 @@ This config will scrape two Mikrotik-devices with addresses `10.100.0.1` and `10
 - `http://10.100.2.7:9180/new/metrics/10.100.0.6`
 ... every 30 seconds with 10 seconds timeout
 
-About `targets` format: I'm using it to predefine device hostname with relabeling, because I can't use any kind of SD. If you don't need it - replace with your own
+About `targets` format: I'm using it to predefine device hostname with relabeling, because I can't use any kind of SD. If you don't need it - replace with your own. You can also add labels to metrics-output - view [this commit](https://github.com/D13410N3/mikrotik_prometheus_exporter/commit/bc42f2e5771decd0cab02ec18d9f5e3b63616ee7) to see how to revert it.
 
 
 ### Alerting example:

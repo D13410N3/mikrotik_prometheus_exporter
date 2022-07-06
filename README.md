@@ -7,11 +7,13 @@ Simple Mikrotik-devices importer for Prometheus (under development)
 - All configuration are set in one file (see `db.sample.yml` for an example)
 
 ## db.yml example
-View file (db.sample.yml)[db.sample.yml]
+View file [db.sample.yml](db.sample.yml)
 
-## Quick run with docker
+# Quick run with docker
 - Create `db.yml` file
-- `docker run --name mikrotik_exporter -d -p 9937:80 -v /path/to/db.yml:/www/db.yml d13410n3/mikrotik_exporter:v1`
+- `docker run --name mikrotik_exporter -d -p 9180:80 -v /path/to/db.yml:/www/db.yml d13410n3/mikrotik_exporter:v1`
+
+# Manual installation
 
 ## Requirements
 It doesn't work as standalone-application - some kind of web-server required (tested with nginx).
@@ -28,25 +30,33 @@ Requirements - PHP 7+ with `curl` module, Web-server. All collectors are tested 
 
 
 ## Prometheus configuration
-Scraping example:
+### Scraping example
 ```
   - job_name: mikrotik
-    scrape_interval: 30s
-    scrape_timeout: 10s
     static_configs:
       -
         targets:
-          - 10.100.0.1
-          - 10.100.0.6
-        labels:
-          __tmp_exporter: localhost:9180
+        - '10.100.0.1/Home-GW'
+        - '10.100.0.6/Home-CHR'
 
+        labels:
+          __tmp_exporter: 10.100.2.7:9180
     relabel_configs:
       -
         source_labels: [__address__]
-        regex: "(.*)"
+        regex: "^(.*)/(.*)$"
         target_label: __metrics_path__
         replacement: /new/metrics/${1}
+      -
+        source_labels: [__address__]
+        regex: "^(.*)/(.*)$"
+        target_label: instance_ip
+        replacement: ${1}
+      -
+        source_labels: [__address__]
+        regex: "^(.*)/(.*)$"
+        target_label: hostname
+        replacement: ${2}
       -
         source_labels: [__tmp_exporter]
         regex: "(.*)"
@@ -58,8 +68,10 @@ This config will scrape two Mikrotik-devices with addresses `10.100.0.1` and `10
 - `http://localhost:9180/new/metrics/10.100.0.6`
 ... every 30 seconds with 10 seconds timeout
 
-Alerting example:
+About `targets` format: I'm using it to predefine device hostname with relabeling, because I can't use any kind of SD. If you don't need it - replace with your own
 
+
+### Alerting example:
 [rules_mt.yml](rules_mt.yml)
 
 
@@ -68,15 +80,12 @@ Nginx example:
 ```
 server
 {
-        listen 1488 default;
+        listen 9180 default;
         set $doc_root '/var/www/mikrotik_prometheus_exporter';
         include /etc/nginx/with-fcgi.conf; // This file contains common PHP-FPM directives
-        rewrite "^/metrics$" /metrics.php;
-        rewrite "^/new/metrics/(.*?)$" /new/metrics.php?ip=$1;
+        rewrite "^/metrics/(.*?)$" /metrics.php?ip=$1;
 }
 ```
-
-
 
 # Collectors
 This list is not completed - development is still under process

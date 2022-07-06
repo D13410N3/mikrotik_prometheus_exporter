@@ -73,25 +73,35 @@ About `targets` format: I'm using it to predefine device hostname with relabelin
 
 
 ## Web-server configuration
-Nginx example:
+Nginx example (real, used by me):
 ```
 server
 {
-	listen 9180 default;
-	set $doc_root '/var/www/mikrotik_prometheus_exporter';
-	rewrite "^/metrics/(.*?)$" /metrics.php?ip=$1;
+        listen 9180 default;
+        set $doc_root '/var/www/000-default-mikrotik';
+        root $doc_root;
+        index index.php;
 
-	location ~ \.php$ {
-		try_files $uri /index.php =404;
-		fastcgi_pass unix:/run/php-fpm.sock;
-		fastcgi_index index.php;
-		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		include fastcgi_params;
-    }
 
-	location ~ /db.yml {
-		deny all;
-	}
+        location ~* (metrics|index)\.php$ {
+                if (!-f "$document_root$fastcgi_script_name") {
+                        return 404;
+                }
+
+                fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+                fastcgi_index index.php;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_ignore_client_abort on;
+        }
+
+        location ~*  {
+                deny all;
+        }
+
+        rewrite "^/metrics/(.*?)$" /metrics.php?ip=$1;
+        access_log /var/log/nginx/mikrotik.access.log;
+        error_log /var/log/nginx/mikrotik.error.log;
 }
 ```
 

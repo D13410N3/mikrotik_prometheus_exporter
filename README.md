@@ -6,11 +6,8 @@ Simple Mikrotik-devices importer for Prometheus (under development)
 - Each device can be set to use all collectors or only some of them
 - All configuration are set in one file (see `db.sample.yml` for an example)
 
-## db.yml example
-View file [db.sample.yml](db.sample.yml)
-
 # Quick run with docker
-- Create `db.yml` file
+- Create `db.yml` file by this [example](db.sample.yml)
 - `docker run --name mikrotik_exporter -d -p 9180:80 -v /path/to/db.yml:/www/db.yml d13410n3/mikrotik_exporter:v1`
 
 # Manual installation
@@ -18,7 +15,7 @@ View file [db.sample.yml](db.sample.yml)
 ## Requirements
 It doesn't work as standalone-application - some kind of web-server required (tested with nginx).
 
-Requirements - PHP 7+ with `curl` module, Web-server. All collectors are tested only with RouterOS version 7
+Requirements - PHP 7+ with `curl` module, Web-server (my choice is nginx with php7.4-fpm). *All collectors are tested only with RouterOS version 7+.*
 
 
 ## Preparation
@@ -26,7 +23,7 @@ Requirements - PHP 7+ with `curl` module, Web-server. All collectors are tested 
 - Enable API (not SSL-api) on your Mikrotik-device
 - Add read-only user
 - (recommended) disable logging for topics `info`, `account`, otherwise you'll get a lot of login/logout messages to your log
-- Create & fill file `db.yml` with credentials from your devices. Use `db.sample.yml` as an example. *Don't forget to restrict direct access to this file!*
+- Create & fill file `db.yml` with credentials from your devices. Use [db.sample.yml](db.sample.yml) as an example. *Don't forget to restrict direct access to this file!*
 
 
 ## Prometheus configuration
@@ -80,10 +77,21 @@ Nginx example:
 ```
 server
 {
-        listen 9180 default;
-        set $doc_root '/var/www/mikrotik_prometheus_exporter';
-        include /etc/nginx/with-fcgi.conf; // This file contains common PHP-FPM directives
-        rewrite "^/metrics/(.*?)$" /metrics.php?ip=$1;
+	listen 9180 default;
+	set $doc_root '/var/www/mikrotik_prometheus_exporter';
+	rewrite "^/metrics/(.*?)$" /metrics.php?ip=$1;
+
+	location ~ \.php$ {
+		try_files $uri /index.php =404;
+		fastcgi_pass unix:/run/php-fpm.sock;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		include fastcgi_params;
+    }
+
+	location ~ /db.yml {
+		deny all;
+	}
 }
 ```
 
@@ -144,3 +152,7 @@ Each collector contains label `collector_name` and some additional metrics
 You can run exporter via cli using this syntax:
 - `php metrics.php 10.100.0.1` - returns default metrics output
 - `php metrics.php 10.100.0.1 interface` - return var_dump() of Mikrotik API response and print default metrics output
+
+
+# Feedback
+Feel free to contact me via issues, Telegram or email from Github-profile

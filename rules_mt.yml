@@ -1,15 +1,14 @@
-groups:
 ############### Mikrotik Rules
   - name: Mikrotik
     rules:
       - alert: "MikrotikIsDown"
-        expr: mikrotik_global_status == 0
+        expr: up{job="mikrotik"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
           title: "Device is unavailable"
-          description: "Mikrotik {{ $labels.hostname }} / {{ $labels.instance_real }} is unavailable"
+          description: "Mikrotik <code>{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> is unavailable"
 
       - alert: "MikrotikIsRestarted"
         expr: mikrotik_resource_uptime < 300
@@ -18,7 +17,7 @@ groups:
           severity: warning
         annotations:
           title: "Device was restarted"
-          description: "Mikrotik {{ $labels.hostname }} / {{ $labels.ip }} was restarted (uptime is {{ $value | humanize }} seconds)"
+          description: "Mikrotik <code>{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> was restarted (uptime is {{ $value | humanize }} seconds)"
 
       - alert: "HighMemUtilization"
         expr: 'mikrotik_resource_free_memory / mikrotik_resource_total_memory * 100 < 10'
@@ -27,7 +26,7 @@ groups:
           severity: warning
         annotations:
           title: "High RAM utilization"
-          description: "High RAM utilization on {{ $labels.hostname }} / {{ $labels.ip }} ({{$value | humanize}}%)"
+          description: "High RAM utilization on <code>{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> ({{$value | humanize}}%)"
 
       - alert: "HighCpuUtilization"
         expr: mikrotik_resource_cpu_load > 90
@@ -36,7 +35,7 @@ groups:
           severity: warning
         annotations:
           title: "High CPU utilization"
-          description: "High CPU utilization on {{ $labels.hostname }} / {{ $labels.ip }} ({{$value | humanize}}%)"
+          description: "High CPU utilization on <code>{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> ({{$value | humanize}}%)"
 
       - alert: "LowAvailableDiskSpace"
         expr: 'mikrotik_resource_free_hdd_space / mikrotik_resource_total_hdd_space * 100 < 10'
@@ -45,7 +44,7 @@ groups:
           severity: warning
         annotations:
           title: "Low free disk space"
-          description: "Low free disk space on {{ $labels.hostname }} / {{ $labels.ip }} ({{$value | humanize}}%)"
+          description: "Low free disk space on <code>{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> ({{$value | humanize}}%)"
 
       - alert: "L2tpTunnelDown"
         expr: '(mikrotik_interface_running{interface_type="l2tp-out"} and (mikrotik_interface_disabled{interface_type="l2tp-out"} == 0)) == 0'
@@ -54,7 +53,7 @@ groups:
           severity: warning
         annotations:
           title: "L2TP tunnel is down"
-          description: "L2TP-out <code>{{ $labels.interface_name }}</code> is DOWN"
+          description: "L2TP-out connection <code>{{ $labels.interface_name }}</code> on <code>{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> is DOWN"
 
       - alert: "EtherDown"
         expr: '((max_over_time(mikrotik_interface_running{interface_type="ether"}[1d]) > mikrotik_interface_running{interface_type="ether"}) and mikrotik_interface_disabled{interface_type="ether"} == 0) * on (hostname, interface_name) group_left (value) mikrotik_interface_comment'
@@ -63,22 +62,67 @@ groups:
           severity: warning
         annotations:
           title: "Ethernet link down"
-          description: "Interface <b>{{ $labels.interface_name }}</b> (<code>{{ $labels.value }}</code>) on <b>{{ $labels.hostname }}</b> is down"
+          description: "Interface <b>{{ $labels.interface_name }}</b> (<code>{{ $labels.value }}</code>) on <code>{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> is down"
 
       - alert: "EtherSpeedLowerRate"
-        expr: 'max_over_time(mikrotik_int_ethernet_actual_speed{}[1d]) > mikrotik_int_ethernet_actual_speed{} * on (hostname, interface_name) group_left(value) mikrotik_interface_comment'
+        expr: '(max_over_time(mikrotik_int_ethernet_actual_speed[1d]) > mikrotik_int_ethernet_actual_speed) * on(hostname, interface_name) group_left(value) mikrotik_interface_comment'
         for: 3m
         labels:
           severity: warning
         annotations:
           title: "Ethernet link speed decrease"
-          description: "Ethernet link speed (<code>{{ $labels.interface_name }}/{{ $labels.value }}/{{ $labels.hostname }}</code>) had changed to lower speed than it was before
-          
+          description: "Ethernet link speed (<code>{{ $labels.interface_name }}/{{ $labels.value }}/{{ $labels.hostname }}/{{ $labels.instance_ip }}</code>) had changed to lower speed than it was before"
+
 
       - alert: "RouterOsVersionChange"
-        expr: 'sum(min_over_time(mikrotik_resource_version{}[1h])) by (hostname, instance_real) != sum(min_over_time(mikrotik_resource_version{}[5m])) by (hostname, instance_real)'
+        expr: 'sum(min_over_time(mikrotik_resource_version{}[1h])) by (hostname, instance_ip) != sum(min_over_time(mikrotik_resource_version{}[5m])) by (hostname, instance_ip)'
         for: 0m
         labels:
           severity: info
         annotations:
-          summary: "RouterOS version was changed on <b>{{ $labels.hostname }}</b> (actual version is <code>{{ $value }}</code>"
+          summary: "RouterOS version was changed on <code>{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> (actual version is <b>{{ $value | humanize }}</b>"
+
+
+      - alert: "LinkFlapping"
+        expr: 'sum(irate(mikrotik_interface_link_downs{location="Msk", hostname="Home-SW4"}[1m])) by (hostname, interface_name) > 0'
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Seems like interface <code>{{ $labels.interface_name }}</code> on <code>{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> is flapping"
+
+      - alert: "EtherRxHighLoad"
+        expr: 'sum(irate(mikrotik_int_ethernet_rx_bytes{}[1m])) by (hostname, interface_name, instance_ip) * 8 / 1024 / 1024 / sum(min_over_time(mikrotik_int_ethernet_actual_speed{}[1m])) by (hostname, interface_name, instance_ip) * on (hostname, interface_name) group_left(value) mikrotik_interface_comment * 100 > 70'
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          title: "Too many RX-bytes"
+          description: "Interface <code>{{ $labels.interface_name }}/{{ $labels.value }}/{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> is overloaded with RX traffic ({{ $value | humanize}}%)"
+
+      - alert: "EtherTxHighLoad"
+        expr: 'sum(irate(mikrotik_int_ethernet_tx_bytes{}[1m])) by (hostname, interface_name, instance_ip) * 8 / 1024 / 1024 / sum(min_over_time(mikrotik_int_ethernet_actual_speed{}[1m])) by (hostname, interface_name, instance_ip) * on (hostname, interface_name) group_left(value) mikrotik_interface_comment * 100 > 70'
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          title: "Too many TX-bytes"
+          description: "Interface <code>{{ $labels.interface_name }}/{{ $labels.value }}/{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> is overloaded with TX traffic ({{ $value | humanize}}%)"
+
+      - alert: "EtherRxCriticalLoad"
+        expr: 'sum(irate(mikrotik_int_ethernet_rx_bytes{}[1m])) by (hostname, interface_name, instance_ip) * 8 / 1024 / 1024 / sum(min_over_time(mikrotik_int_ethernet_actual_speed{}[1m])) by (hostname, interface_name, instance_ip) * on (hostname, interface_name) group_left(value) mikrotik_interface_comment * 100 > 95'
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          title: "Too many RX-bytes"
+          description: "Interface <code>{{ $labels.interface_name }}/{{ $labels.value }}/{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> is overloaded with RX traffic ({{ $value | humanize}}%)"
+
+      - alert: "EtherTxCriticalLoad"
+        expr: 'sum(irate(mikrotik_int_ethernet_tx_bytes{}[1m])) by (hostname, interface_name, instance_ip) * 8 / 1024 / 1024 / sum(min_over_time(mikrotik_int_ethernet_actual_speed{}[1m])) by (hostname, interface_name, instance_ip) * on (hostname, interface_name) group_left(value) mikrotik_interface_comment * 100 > 95'
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          title: "Too many TX-bytes"
+          description: "Interface <code>{{ $labels.interface_name }}/{{ $labels.value }}/{{ $labels.hostname }}/{{ $labels.instance_ip }}</code> is overloaded with TX traffic ({{ $value | humanize}}%)"

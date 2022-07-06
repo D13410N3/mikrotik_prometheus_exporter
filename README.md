@@ -64,8 +64,8 @@ Requirements - PHP 7+ with `curl` module, Web-server. All collectors are tested 
         replacement: ${1}
 ```
 This config will scrape two Mikrotik-devices with addresses `10.100.0.1` and `10.100.0.6` using URLs:
-- `http://localhost:9180/new/metrics/10.100.0.1`
-- `http://localhost:9180/new/metrics/10.100.0.6`
+- `http://10.100.2.7:9180/new/metrics/10.100.0.1`
+- `http://10.100.2.7:9180/new/metrics/10.100.0.6`
 ... every 30 seconds with 10 seconds timeout
 
 About `targets` format: I'm using it to predefine device hostname with relabeling, because I can't use any kind of SD. If you don't need it - replace with your own

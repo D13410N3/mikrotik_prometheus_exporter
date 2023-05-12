@@ -31,8 +31,8 @@ if (checkCollector($_COLLECTOR['name'], $_COLLECTORS) && $_COLLECTOR['enable'] =
 			// 3) last-handshake
 			// 4) status
 			// And save these labels in all of them:
-			// interface, public-key, current-endpoint-address, current-endpoint-port, allowed-address, comment
-			$label_names = array('interface', 'public-key', 'current-endpoint-address', 'current-endpoint-port', 'allowed-address', 'comment');
+			// interface, public-key, current-endpoint-address, current-endpoint-port, allowed-address
+			$label_names = array('interface', 'public-key', 'current-endpoint-address', 'current-endpoint-port', 'allowed-address');
 			
 			$labels = array();
 			foreach($label_names as $_key => $_value) {
